@@ -21,12 +21,17 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeFront() {
 		checkNotEmpty();
-		throw new TODOErr();
+		T toReturn = start.value;
+		Node<T> newStart = start.after;
+		newStart.before = null;
+		start = newStart;
+		return toReturn;
 	}
 
 	@Override
 	public T removeBack() {
 		checkNotEmpty();
+		
 		throw new TODOErr();
 	}
 
@@ -38,7 +43,13 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addFront(T item) {
-		throw new TODOErr();
+		Node<T> newStart = new Node<T>(item);
+		newStart.after = start;
+		newStart.before = null;
+		if (start != null) {
+			start.before = newStart;
+		}
+		start = newStart;
 	}
 
 	@Override

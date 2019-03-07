@@ -2,7 +2,6 @@ package edu.smith.cs.csc212.adtr.real;
 
 import edu.smith.cs.csc212.adtr.ListADT;
 import edu.smith.cs.csc212.adtr.errors.BadIndexError;
-import edu.smith.cs.csc212.adtr.errors.TODOErr;
 
 public class SinglyLinkedList<T> extends ListADT<T> {
 	/**
@@ -14,17 +13,54 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeFront() {
 		checkNotEmpty();
-		throw new TODOErr();
+		T value = start.value;
+		start = start.next;
+		return value;
 	}
 
 	@Override
 	public T removeBack() {
-		throw new TODOErr();
+		checkNotEmpty();
+		Node<T> prev = start;
+		Node<T> curr = start.next;
+		if (curr == null) {
+			start = null;
+			return prev.value;
+		}
+		while (curr.next != null) {
+			prev = curr;
+			curr = curr.next;
+		}
+		T toReturn = curr.value;
+		prev.next = null;
+		return toReturn;
 	}
 
 	@Override
 	public T removeIndex(int index) {
-		throw new TODOErr();
+		checkNotEmpty();
+		T toReturn;
+		if (index == 0) {
+			toReturn = removeFront();
+		}
+		else {
+			Node<T> prev = start;
+			Node<T> curr = start.next;
+			int i = 1;
+			while (i < index) {
+				prev = curr;
+				curr = curr.next;
+				i++;
+			}
+			if (curr == null) {
+				throw new BadIndexError(index);
+			}
+			else {
+				prev.next = curr.next;
+				toReturn = curr.value;
+			}
+		}
+		return toReturn;
 	}
 
 	@Override
@@ -34,12 +70,30 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addBack(T item) {
-		throw new TODOErr();
+		checkNotEmpty();
+		Node<T> curr = start;
+		while (curr.next != null) {
+			curr = curr.next;
+		}
+		curr.next = new Node<T>(item, null);
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
-		throw new TODOErr();
+		if (index < 0) {
+			throw new BadIndexError(index);
+		}
+		int i = 0;
+		Node<T> curr = this.start;
+		while (i < index) {
+			if (curr == null) {
+				throw new BadIndexError(index);
+			}
+			curr = curr.next;
+			i++;
+		}
+		Node<T> toBeNext = curr.next;
+		curr.next = new Node<T>(item, toBeNext);
 	}
 	
 	
@@ -47,13 +101,17 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T getFront() {
 		checkNotEmpty();
-		throw new TODOErr();
+		return start.value;
 	}
 
 	@Override
 	public T getBack() {
 		checkNotEmpty();
-		throw new TODOErr();
+		Node<T> curr = start;
+		while (curr.next != null) {
+			curr = curr.next;
+		}
+		return curr.value;
 	}
 
 	@Override
@@ -71,8 +129,20 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void setIndex(int index, T value) {
+		if (index < 0) {
+			throw new BadIndexError(index);
+		}
 		checkNotEmpty();
-		throw new TODOErr();
+		Node<T> curr = start;
+		int i = 0;
+		while (i < index) {
+			if (curr.next == null) {
+				throw new BadIndexError(index);
+			}
+			curr = curr.next;
+			i++;
+		}
+		curr.value = value;
 	}
 
 	@Override
