@@ -39,9 +39,8 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
-		T toReturn;
 		if (index == 0) {
-			toReturn = removeFront();
+			return removeFront();
 		}
 		else {
 			Node<T> prev = start;
@@ -57,10 +56,9 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 			}
 			else {
 				prev.next = curr.next;
-				toReturn = curr.value;
+				return curr.value;
 			}
 		}
-		return toReturn;
 	}
 
 	@Override

@@ -31,25 +31,50 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeBack() {
 		checkNotEmpty();
-		
-		throw new TODOErr();
+		T toReturn = end.value;
+		Node<T> newEnd = end.before;
+		newEnd.after = null;
+		end = newEnd;
+		return toReturn;
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
-		throw new TODOErr();
+		if (index == 0) {
+			return removeFront();
+		}
+		else {
+			Node<T> prev = start;
+			Node<T> curr = start.after;
+			int i = 1;
+			while (i < index) {
+				prev = curr;
+				curr = curr.after;
+				i++;
+			}
+			if (curr == null) {
+				throw new BadIndexError(index);
+			}
+			else {
+				Node<T> afterCurr = curr.after;
+				prev.after = afterCurr;
+				afterCurr.before = prev;
+				return curr.value;
+			}
+		}
 	}
 
 	@Override
 	public void addFront(T item) {
-		Node<T> newStart = new Node<T>(item);
-		newStart.after = start;
-		newStart.before = null;
-		if (start != null) {
-			start.before = newStart;
+		if (start == null) {
+			start = end = new Node<T>(item);
+		} else {
+			Node<T> second = start;
+			start = new Node<T>(item);
+			start.after = second;
+			second.before = start;
 		}
-		start = newStart;
 	}
 
 	@Override
@@ -66,17 +91,41 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addIndex(int index, T item) {
-		throw new TODOErr();
+		if (index < 0) {
+			throw new BadIndexError(index);
+		}
+		if (index == 0) {
+			addFront(item);
+		}
+		else {
+			int i = 0;
+			Node<T> prev = start;
+			while (i < index - 1) {
+				prev = prev.after;
+				if (prev == null) {
+					throw new BadIndexError(index);
+				}
+				i++;
+			}
+			Node<T> next = prev.after;
+			Node<T> beingAdded = new Node<T>(item);
+			prev.after = beingAdded;
+			beingAdded.after = next;
+			beingAdded.before = prev;
+			
+		}
 	}
 
 	@Override
 	public T getFront() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return start.value;
 	}
 
 	@Override
 	public T getBack() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return end.value;
 	}
 	
 	@Override
@@ -90,12 +139,16 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public int size() {
-		throw new TODOErr();
+		int count = 0;
+		for (Node<T> n = this.start; n != null; n = n.after) {
+			count++;
+		}
+		return count;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new TODOErr();
+		return start == null;
 	}
 	
 	/**
