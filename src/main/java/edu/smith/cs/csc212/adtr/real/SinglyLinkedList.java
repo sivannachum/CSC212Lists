@@ -70,12 +70,16 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addBack(T item) {
-		checkNotEmpty();
 		Node<T> curr = start;
-		while (curr.next != null) {
-			curr = curr.next;
+		if (curr == null) {
+			addFront(item);
 		}
-		curr.next = new Node<T>(item, null);
+		else {
+			while (curr.next != null) {
+				curr = curr.next;
+			}
+			curr.next = new Node<T>(item, curr.next);
+		}
 	}
 
 	@Override
@@ -83,17 +87,21 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 		if (index < 0) {
 			throw new BadIndexError(index);
 		}
-		int i = 0;
-		Node<T> curr = this.start;
-		while (i < index) {
-			if (curr == null) {
-				throw new BadIndexError(index);
-			}
-			curr = curr.next;
-			i++;
+		if (index == 0) {
+			addFront(item);
 		}
-		Node<T> toBeNext = curr.next;
-		curr.next = new Node<T>(item, toBeNext);
+		else {
+			int i = 0;
+			Node<T> prev = start;
+			while (i < index - 1) {
+				prev = prev.next;
+				if (prev == null) {
+					throw new BadIndexError(index);
+				}
+				i++;
+			}
+			prev.next = new Node<T>(item, prev.next);
+		}
 	}
 	
 	
