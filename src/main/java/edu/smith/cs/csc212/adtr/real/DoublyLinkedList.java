@@ -2,7 +2,6 @@ package edu.smith.cs.csc212.adtr.real;
 
 import edu.smith.cs.csc212.adtr.ListADT;
 import edu.smith.cs.csc212.adtr.errors.BadIndexError;
-import edu.smith.cs.csc212.adtr.errors.TODOErr;
 
 
 public class DoublyLinkedList<T> extends ListADT<T> {
@@ -23,7 +22,9 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 		checkNotEmpty();
 		T toReturn = start.value;
 		Node<T> newStart = start.after;
-		newStart.before = null;
+		if (newStart != null) {
+			newStart.before = null;
+		}
 		start = newStart;
 		return toReturn;
 	}
@@ -33,7 +34,12 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 		checkNotEmpty();
 		T toReturn = end.value;
 		Node<T> newEnd = end.before;
-		newEnd.after = null;
+		if (newEnd != null) {
+			newEnd.after = null;
+		}
+		else {
+			start = null;
+		}
 		end = newEnd;
 		return toReturn;
 	}
@@ -59,7 +65,9 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 			else {
 				Node<T> afterCurr = curr.after;
 				prev.after = afterCurr;
-				afterCurr.before = prev;
+				if (afterCurr != null) {
+					afterCurr.before = prev;
+				}
 				return curr.value;
 			}
 		}
@@ -112,7 +120,9 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 			prev.after = beingAdded;
 			beingAdded.after = next;
 			beingAdded.before = prev;
-			
+			if (prev == end) {
+				end = beingAdded;
+			}
 		}
 	}
 
@@ -130,11 +140,40 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	
 	@Override
 	public T getIndex(int index) {
-		throw new TODOErr();
+		if (index < 0) {
+			throw new BadIndexError(index);
+		}
+		if (index == 0) {
+			return getFront();
+		}
+		else {
+			int i = 0;
+			Node<T> curr = start;
+			while (i < index) {
+				curr = curr.after;
+				if (curr == null) {
+					throw new BadIndexError(index);
+				}
+				i++;
+			}
+			return curr.value;
+		}
 	}
 	
 	public void setIndex(int index, T value) {
-		throw new TODOErr();
+		if (index < 0) {
+			throw new BadIndexError(index);
+		}
+		int i = 0;
+		Node<T> curr = start;
+		while (i < index) {
+			curr = curr.after;
+			if (curr == null) {
+				throw new BadIndexError(index);				
+				}
+			i++;
+		}
+		curr.value = value;
 	}
 
 	@Override
