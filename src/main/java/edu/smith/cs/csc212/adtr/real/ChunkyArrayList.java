@@ -28,27 +28,33 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 
 	@Override
 	public T removeFront() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return chunks.getFront().removeFront();
 	}
 
 	@Override
 	public T removeBack() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return chunks.getBack().removeBack();
 	}
 
 	@Override
 	public T removeIndex(int index) {
-		throw new TODOErr();
+		return chunks.getIndex(index).removeIndex(index);
 	}
 
 	@Override
 	public void addFront(T item) {
-		throw new TODOErr();
+		FixedSizeList<T> newFront = makeChunk();
+		newFront.addFront(item);
+		chunks.addIndex(0, newFront);
 	}
 
 	@Override
 	public void addBack(T item) {
-		throw new TODOErr();
+		FixedSizeList<T> newBack = makeChunk();
+		newBack.addBack(item);
+		chunks.addIndex(chunks.size(), newBack);
 	}
 
 	@Override
@@ -85,11 +91,13 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 	
 	@Override
 	public T getFront() {
+		checkNotEmpty();
 		return this.chunks.getFront().getFront();
 	}
 
 	@Override
 	public T getBack() {
+		checkNotEmpty();
 		return this.chunks.getBack().getBack();
 	}
 
