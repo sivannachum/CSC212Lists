@@ -81,9 +81,19 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 
 	@Override
 	public void addBack(T item) {
-		FixedSizeList<T> newBack = makeChunk();
-		newBack.addBack(item);
-		chunks.addIndex(chunks.size(), newBack);
+		if (chunks.isEmpty()) {
+			FixedSizeList<T> back = makeChunk();
+			back.addBack(item);
+			chunks.addBack(back);
+		}
+		else if (chunks.getBack().isFull()) {
+			FixedSizeList<T> newBack = makeChunk();
+			newBack.addBack(item);
+			chunks.addBack(newBack);
+		}
+		else {
+			chunks.getBack().addBack(item);
+		}
 	}
 
 	@Override
