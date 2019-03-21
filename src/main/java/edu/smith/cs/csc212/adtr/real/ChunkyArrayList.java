@@ -38,7 +38,11 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 			chunks.removeBack();
 			checkNotEmpty();
 		}
-		return chunks.getBack().removeBack();
+		T toReturn = chunks.getBack().removeBack();
+		if (chunks.getBack().isEmpty()) {
+			chunks.removeBack();
+		}
+		return toReturn;
 	}
 
 	@Override
@@ -47,17 +51,23 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 			throw new EmptyListError();
 		}
 		int start = 0;
+		int i = 0;
 		for (FixedSizeList<T> chunk : this.chunks) {
 			// calculate bounds of this chunk.
 			int end = start + chunk.size();
-			
 			// Check whether the index should be in this chunk:
 			if (start <= index && index < end) {
-				return chunk.removeIndex(index - start);
+				T toReturn = chunk.removeIndex(index - start);
+				if (chunk.isEmpty()) {
+					chunks.removeIndex(i);
+				}
+				return toReturn;
+				//return chunk.removeIndex(index - start);
 			}
 			
 			// update bounds of next chunk.
 			start = end;
+			i++;
 		}
 		throw new BadIndexError(index);
 	}
@@ -121,8 +131,13 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 						nextChunk = makeChunk();
 						chunks.addBack(nextChunk);
 					}
-					nextChunk.addFront(chunk.removeBack());
-					chunk.addIndex(index - start, item);
+					if (index == end) {
+						nextChunk.addFront(item);
+					}
+					else {
+						nextChunk.addFront(chunk.removeBack());
+						chunk.addIndex(index - start, item);
+					}
 				} else {
 					// put right in this chunk, there's space.
 					chunk.addIndex(index - start, item);
