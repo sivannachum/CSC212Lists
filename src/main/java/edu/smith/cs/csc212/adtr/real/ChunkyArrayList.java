@@ -98,9 +98,6 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 
 	@Override
 	public void addIndex(int index, T item) {
-		// THIS IS THE HARDEST METHOD IN CHUNKY-ARRAY-LIST.
-		// DO IT LAST.
-		
 		int chunkIndex = 0;
 		int start = 0;
 		for (FixedSizeList<T> chunk : this.chunks) {
