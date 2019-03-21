@@ -25,6 +25,9 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 		if (newStart != null) {
 			newStart.before = null;
 		}
+		else {
+			end = null;
+		}
 		start = newStart;
 		return toReturn;
 	}
@@ -67,6 +70,9 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 				prev.after = afterCurr;
 				if (afterCurr != null) {
 					afterCurr.before = prev;
+				}
+				else {
+					end = prev;
 				}
 				return curr.value;
 			}
